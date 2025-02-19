@@ -1,0 +1,93 @@
+--department table
+CREATE TABLE department(
+	dept_id SERIAL PRIMARY KEY,
+	dept_name VARCHAR(20) UNIQUE NOT NULL
+);
+
+--employees table
+CREATE TABLE employees(
+	emp_id SERIAL PRIMARY KEY,
+	emp_name VARCHAR(20) NOT NULL,
+	emp_email VARCHAR(40) UNIQUE,
+	emp_salary NUMERIC(10,2) NOT NULL CHECK(emp_salary > 0),
+	dept_id INT REFERENCES department(dept_id)
+);
+
+--projects table
+CREATE TABLE projects(
+	projects_id SERIAL PRIMARY KEY,
+	project_name VARCHAR(20) NOT NULL,
+	dept_id INT REFERENCES department(dept_id)
+);
+
+--Insertion of data in the department table
+INSERT INTO department (dept_name) VALUES ('Development'),('Testing'),('Design'),('Marketing'),('HR');
+INSERT INTO department (dept_name) VALUES ('Sales');
+
+--Insertion of a data in the employees table
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Santhosh','santhosh@tringapps.com',25000,1);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Gokul','gokul@gmail.com',35000,2);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Dipshy','dipshy@gmail.com',50000,1);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Sana','sana@gmail.com',25000,5);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Gowreesh','gowreesh@gmail.com',20000,3);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Lohi','lohi@gmail.com',20000,3);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Arul','arul@gmail.com',15000,4);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Ishwarya','ishu@gmail.com',15000,4);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Sana','sana22@gmail.com',25000,1);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Dipshy','dipshysarv@gmail.com',12000,5);
+INSERT INTO employees (emp_name,emp_email,emp_salary,dept_id) VALUES ('Gokul','gokulraj@gmail.com',25000,null);
+
+--Insertion of data in the projects table
+INSERT INTO projects (project_name,dept_id) VALUES ('Tringapps website',1);
+INSERT INTO projects (project_name,dept_id) VALUES ('Persona Page',1);
+INSERT INTO projects (project_name,dept_id) VALUES ('Persona Page',2);
+INSERT INTO projects (project_name,dept_id) VALUES ('Tringapps website',3);
+INSERT INTO projects (project_name,dept_id) VALUES ('Task manager app',4);
+
+--Inner Join
+SELECT department.dept_name, employees.emp_name FROM department INNER JOIN employees ON department.dept_id = employees.dept_id;
+
+--Left Join
+SELECT dept_name, emp_name FROM department LEFT JOIN employees ON department.dept_id = employees.dept_id;
+
+--Right Join
+SELECT dept_name, emp_name FROM department RIGHT JOIN employees ON department.dept_id = employees.dept_id;
+
+--Full Outer Join
+SELECT dept_name, emp_name FROM department FULL OUTER JOIN employees ON department.dept_id = employees.dept_id;
+
+--Join Multiple tables
+SELECT dept_name, emp_name, project_name FROM department INNER JOIN employees ON department.dept_id = employees.dept_id INNER JOIN projects ON department.dept_id = projects.dept_id;
+
+--Aggregate Functions
+
+--Count
+SELECT COUNT(employees.emp_id), department.dept_name FROM employees INNER JOIN department ON employees.dept_id = department.dept_id GROUP BY department.dept_id ORDER BY COUNT(employees.emp_id);
+
+--SUM
+SELECT SUM(emp_salary),department.dept_name FROM employees INNER JOIN department ON employees.dept_id = department.dept_id GROUP BY department.dept_id;
+
+--Average
+SELECT AVG(emp_salary),department.dept_name FROM employees INNER JOIN department ON employees.dept_id = department.dept_id GROUP BY department.dept_id;
+
+--Maximum Salary
+		--Max salary in each department
+SELECT MAX(emp_salary),dept_name FROM employees FULL OUTER JOIN department ON employees.dept_id = department.dept_id GROUP BY department.dept_id;
+		--Max salary in company
+SELECT MAX(emp_salary) FROM employees;
+
+--Minimum Salary
+		--Min salary in each department
+SELECT MIN(emp_salary),dept_name FROM employees FULL OUTER JOIN department ON employees.dept_id = department.dept_id GROUP BY department.dept_id;
+		--Min salary in company
+SELECT MIN(emp_salary) FROM employees;
+
+--Total Number of projects in each department
+SELECT COUNT(projects_id),dept_name FROM projects FULL OUTER JOIN department ON projects.dept_id = department.dept_id GROUP BY department.dept_id;
+
+
+SELECT * FROM department;
+
+SELECT * FROM employees;
+
+SELECT * FROM projects;
