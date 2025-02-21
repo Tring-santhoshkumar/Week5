@@ -103,6 +103,51 @@ GROUP BY department.dept_id
 HAVING COUNT(projects.dept_id) > 1;
 
 
+--Function to calculate bonuses 
+CREATE FUNCTION calculateBonus(emp_salary REAL,percentage FLOAT)
+RETURNS INT AS $$
+DECLARE
+	bonus INT;
+BEGIN
+	bonus := emp_salary * (percentage/100);
+	RETURN bonus;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT emp_name,emp_salary,calculateBonus(emp_salary,10.0) FROM employees;
+
+
+
+--Function to count employees in a department 	
+CREATE FUNCTION countEmployees(d_id INT)
+RETURNS INT AS $$
+BEGIN
+	RETURN (SELECT COUNT(emp_id) FROM employees WHERE dept_id = d_id);
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT dept_name,countEmployees(dept_id) FROM department;
+
+
+--Function to check high salaries 
+CREATE FUNCTION checkHighSalary(emp_salary REAL)
+RETURNS TEXT AS $$
+BEGIN
+	IF emp_salary > 30000
+	THEN RETURN ('HIGH SALARY');
+	
+	ELSIF emp_salary > 20000
+	THEN RETURN ('MEDIUM SALARY');
+	
+	ELSE
+		 RETURN ('LOW SALARY');
+	END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT emp_name,emp_salary,checkHighSalary(emp_salary) FROM employees;
+
+
 SELECT * FROM department;
 
 SELECT * FROM employees;
