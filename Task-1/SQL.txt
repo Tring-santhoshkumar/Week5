@@ -85,6 +85,23 @@ SELECT MIN(emp_salary) FROM employees;
 --Total Number of projects in each department
 SELECT COUNT(projects_id),dept_name FROM projects FULL OUTER JOIN department ON projects.dept_id = department.dept_id GROUP BY department.dept_id;
 
+-- Average Salary for each department where avg salary is greater than 20000
+SELECT dept_name,AVG(emp_salary) FROM department JOIN employees ON department.dept_id = employees.dept_id 
+GROUP BY department.dept_id 
+HAVING AVG(emp_salary) > 20000;
+
+-- Departments with more than 1 employees
+SELECT dept_name,COUNT(employees.dept_id) FROM department JOIN employees ON department.dept_id = employees.dept_id 
+GROUP BY department.dept_id 
+HAVING COUNT(employees.dept_id) > 1 
+ORDER BY COUNT(employees.dept_id) DESC;
+
+
+--Projects assigned to departments that have at least 2 projects.
+SELECT dept_name,COUNT(projects.dept_id) FROM department JOIN projects ON department.dept_id = projects.dept_id
+GROUP BY department.dept_id
+HAVING COUNT(projects.dept_id) > 1;
+
 
 SELECT * FROM department;
 
