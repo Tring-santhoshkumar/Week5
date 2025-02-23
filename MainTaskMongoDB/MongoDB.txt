@@ -1,0 +1,320 @@
+db.createCollection('rooms');
+
+
+db['rooms'].insertOne({ room_no : 1, room_type : 'Ac', room_price : 1000 , room_available : true})
+
+
+db['rooms'].insertMany([{ room_no : 1, room_type : 'Ac', room_price : 1000 , room_available : true
+},{ room_no : 2, room_type : 'Ac', room_price : 1000, room_available : true
+},{ room_no : 3, room_type : 'Non Ac', room_price : 500 , room_available : true
+},{ room_no : 4, room_type : 'Non Ac', room_price : 500 , room_available : true
+},{ room_no : 5, room_type : 'Non Ac', room_price : 500 , room_available : true
+}])
+
+
+db['rooms'].find()
+{
+  _id: ObjectId('67bb239dd7673ee462301c67'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c68'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c69'),
+  room_no: 2,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6a'),
+  room_no: 3,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6b'),
+  room_no: 4,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6c'),
+  room_no: 5,
+  room_type: 'Non Ac',
+  room_price: 500,
+ }
+
+
+db.createCollection('books');
+
+
+function bookRoom(currRoom_id, currCustomer_name, currCheck_in, currCheck_out){
+let currRoom = db['rooms'].findOne({ _id : ObjectId(currRoom_id) , room_available : true});
+if(!currRoom){
+	return "Room is not available for Booking.";
+}
+db['books'].insertOne({ _id : ObjectId(), room_id : ObjectId(currRoom_id), customer_name : currCustomer_name, check_in : currCheck_in, check_out : currCheck_out})
+db['rooms'].updateOne({ _id : ObjectId(currRoom_id)},{ $set : { room_available : false}});
+return "Room is successfully Booked!!!";
+}
+
+
+bookRoom("67bb239dd7673ee462301c67",'Santhosh','2025-02-22','2025-02-23')
+Room is successfully Booked!!!
+
+
+db['rooms'].find()
+{
+  _id: ObjectId('67bb239dd7673ee462301c67'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: false
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c68'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c69'),
+  room_no: 2,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6a'),
+  room_no: 3,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6b'),
+  room_no: 4,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6c'),
+  room_no: 5,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+
+
+db['books'].find()
+{
+  _id: ObjectId('67bb29a9d7673ee462301c6d'),
+  room_id: ObjectId('67bb239dd7673ee462301c67'),
+  customer_name: 'Santhosh',
+  check_in: '2025-02-22',
+  check_out: '2025-02-23'
+}
+
+
+function cancelRoom(currRoom_id){
+	let currRoom = db['books'].findOne({ room_id : ObjectId(currRoom_id) });
+	if(!currRoom){
+	return "Room is not booked.";
+	}
+	db['books'].deleteOne({ room_id : ObjectId(currRoom_id) });
+	db['rooms'].updateOne({ _id : ObjectId(currRoom_id)}, { $set : { room_available : true}})
+	return "Room has been Unbooked.";
+}
+
+
+cancelRoom('67bb239dd7673ee462301c67');
+Room has been Unbooked.
+
+
+db['rooms'].find()
+{
+  _id: ObjectId('67bb239dd7673ee462301c67'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c68'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c69'),
+  room_no: 2,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6a'),
+  room_no: 3,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6b'),
+  room_no: 4,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6c'),
+  room_no: 5,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+
+
+
+cancelRoom('67bb239dd7673ee462301c67');
+Room is not booked.
+
+
+bookRoom('67bb239dd7673ee462301c67','Santhos','2025-02-22','2025-02-23');
+Room is successfully Booked!!!
+
+
+db['books'].find()
+{
+  _id: ObjectId('67bb3be7d7673ee462301c6e'),
+  room_id: ObjectId('67bb239dd7673ee462301c67'),
+  customer_name: 'Santhos',
+  check_in: '2025-02-22',
+  check_out: '2025-02-23'
+}
+
+
+db['rooms'].find()
+{
+  _id: ObjectId('67bb239dd7673ee462301c67'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: false
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c68'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c69'),
+  room_no: 2,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6a'),
+  room_no: 3,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6b'),
+  room_no: 4,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6c'),
+  room_no: 5,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+
+
+
+bookRoom('67bb239dd7673ee462301c67','Gokul','2025-02-22','2025-02-23')
+Room is not available for Booking.
+
+
+bookRoom('67bb2440d7673ee462301c6a','Gokul','2025-02-22','2025-02-23')
+Room is successfully Booked!!!
+
+
+db['books'].find()
+{
+  _id: ObjectId('67bb3be7d7673ee462301c6e'),
+  room_id: ObjectId('67bb239dd7673ee462301c67'),
+  customer_name: 'Santhos',
+  check_in: '2025-02-22',
+  check_out: '2025-02-23'
+}
+{
+  _id: ObjectId('67bb3e9dd7673ee462301c6f'),
+  room_id: ObjectId('67bb2440d7673ee462301c6a'),
+  customer_name: 'Gokul',
+  check_in: '2025-02-22',
+  check_out: '2025-02-23'
+}
+
+
+db['rooms'].find()
+{
+  _id: ObjectId('67bb239dd7673ee462301c67'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: false
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c68'),
+  room_no: 1,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c69'),
+  room_no: 2,
+  room_type: 'Ac',
+  room_price: 1000,
+  room_available: true
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6a'),
+  room_no: 3,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: false
+}
+{
+  _id: ObjectId('67bb2440d7673ee462301c6b'),
+  room_no: 4,
+  room_type: 'Non Ac',
+  room_price: 500,
+  room_available: true
+}
+
+
+
